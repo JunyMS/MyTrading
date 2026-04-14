@@ -14,7 +14,14 @@ st.title("📱 Gestión de Riesgo")
 # ======================
 st.subheader("⚙️ Parámetros generales")
 
+st.number_input(
+    "Capital Total Cartera (€)", 
+    value=10000.0, 
+    step=1000.0
+)
+
 col1, col2 = st.columns(2)
+
 with col1:
     importe_a_arriesgar = st.number_input(
         "Importe a arriesgar (€)",
@@ -30,6 +37,8 @@ with col2:
         value=2.0,
         step=1.0
     )
+
+
 
 usar_eeuu = st.toggle("Usar mercado EEUU", value=False)
 
