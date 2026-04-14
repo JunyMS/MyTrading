@@ -120,21 +120,21 @@ with tab_resultado:
         st.metric("Stop ajustado", f"{stop_loss_ajustado:.2f}")
 
         if perdida_ajustada > perdida_total_tr:
-            st.error(
+            st.success(
                 f"❌ Stop ajustado aumenta el riesgo\n\n"
-                f"✅ Usar stop ATR: **{stop_loss_tr:.2f}**"
-                f"\n\nVenta total al stop: **{num_acciones_tr * stop_loss_tr:.2f} €**"
+                f"✅ Usar stop ATR: **{stop_loss_tr:.2f}**\n\n"
+                f"💰 Venta total al stop: **{num_acciones_tr * stop_loss_tr:.2f} €**"
             )
         else:
             st.success(
                 f"✅ Stop ajustado mantiene/reduce riesgo\n\n"
-                f"➡️ Usar stop ajustado: **{stop_loss_ajustado:.2f}**"
-                f"\n\nVenta total al stop: **{num_acciones_tr * stop_loss_ajustado:.2f} €**"
+                f"➡️ Usar stop ajustado: **{stop_loss_ajustado:.2f}**\n\n"
+                f"💰 Venta total al stop: **{num_acciones_tr * stop_loss_ajustado:.2f} €**"
 
             )
     else:
         st.success(
             f"✅ Mercado EEUU no usado\n\n"
-            f"➡️ Usar stop ATR: **{stop_loss_tr:.2f}**"
-            f"\n\nVenta total al stop: **{num_acciones_tr * stop_loss_tr:.2f} €**"
+            f"➡️ Usar stop ATR: **{stop_loss_tr:.2f}**\n\n"
+            f"💰 Venta total al stop: **{num_acciones_tr * stop_loss_tr:.2f} €**"
         )
