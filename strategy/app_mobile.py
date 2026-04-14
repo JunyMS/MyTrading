@@ -14,12 +14,22 @@ st.title("📱 Gestión de Riesgo")
 # ======================
 st.subheader("⚙️ Parámetros generales")
 
-importe_a_arriesgar = st.number_input(
-    "Importe a arriesgar (€)",
-    min_value=1.0,
-    value=100.0,
-    step=1.0
-)
+col1, col2 = st.columns(2)
+with col1:
+    importe_a_arriesgar = st.number_input(
+        "Importe a arriesgar (€)",
+        min_value=1.0,
+        value=100.0,
+        step=1.0
+    )
+
+with col2:
+    distancia_atr = st.number_input(
+        "Distancia ATR (número de ATR para el stop)",
+        min_value=0.1,
+        value=2.0,
+        step=1.0
+    )
 
 usar_eeuu = st.toggle("Usar mercado EEUU", value=False)
 
@@ -43,22 +53,21 @@ with tab_eeuu:
             "ATR actual EEUU",
             min_value=0.01,
             value=6.40,
-            step=0.01
+            step=1.00
         )
 
         precio_actual_eeuu = st.number_input(
             "Precio actual EEUU",
             min_value=0.01,
             value=244.50,
-            step=0.01
+            step=1.00
         )
 
-        num_acciones_eeuu = int(importe_a_arriesgar / (atr_actual_eeuu * 2))
-        stop_loss_eeuu = precio_actual_eeuu - (atr_actual_eeuu * 2)
+        num_acciones_eeuu = int(importe_a_arriesgar / (atr_actual_eeuu * distancia_atr))
+        stop_loss_eeuu = precio_actual_eeuu - (atr_actual_eeuu * distancia_atr)
         importe_total_eeuu = num_acciones_eeuu * precio_actual_eeuu
         porcentaje_riesgo_eeuu = (importe_a_arriesgar / importe_total_eeuu) * 100
         perdida_total_eeuu = num_acciones_eeuu * (precio_actual_eeuu - stop_loss_eeuu)
-
         importe_venta_eeuu = num_acciones_eeuu * stop_loss_eeuu
 
         st.metric("Acciones", num_acciones_eeuu)
@@ -84,19 +93,18 @@ with tab_tr:
         "Precio actual TR",
         min_value=0.01,
         value=208.15,
-        step=0.01
+        step=1.00
     )
 
-    num_acciones_tr = int(importe_a_arriesgar / (atr_actual_tr * 2))
-    stop_loss_tr = precio_actual_tr - (atr_actual_tr * 2)
+    num_acciones_tr = int(importe_a_arriesgar / (atr_actual_tr * distancia_atr))
+    stop_loss_tr = precio_actual_tr - (atr_actual_tr * distancia_atr)
     importe_total_tr = num_acciones_tr * precio_actual_tr
     porcentaje_riesgo_tr = (importe_a_arriesgar / importe_total_tr) * 100
     perdida_total_tr = num_acciones_tr * (precio_actual_tr - stop_loss_tr)
-
     importe_venta_tr = num_acciones_tr * stop_loss_tr
 
-    st.metric("Acciones", num_acciones_tr)
-    st.metric("Stop ATR", f"{stop_loss_tr:.2f}")
+    st.metric("Acciones a comprar", num_acciones_tr)
+    st.metric("**Stop ATR**", f"{stop_loss_tr:.2f} €")
     st.metric("Riesgo (%)", f"{porcentaje_riesgo_tr:.2f} %")
     st.metric("Pérdida máxima", f"{perdida_total_tr:.2f} €")
     st.metric("Venta total al stop", f"{importe_venta_tr:.2f} €")
@@ -120,7 +128,7 @@ with tab_resultado:
         st.metric("Stop ajustado", f"{stop_loss_ajustado:.2f}")
 
         if perdida_ajustada > perdida_total_tr:
-            st.success(
+            st.warning(
                 f"❌ Stop ajustado aumenta el riesgo\n\n"
                 f"✅ Usar stop ATR: **{stop_loss_tr:.2f}**\n\n"
                 f"💰 Venta total al stop: **{num_acciones_tr * stop_loss_tr:.2f} €**"
